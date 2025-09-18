@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: ../..
+      dockerfile: app/infra/Dockerfile.backend
+    env_file:
+      - ../../.env
+    volumes:
+      - ../../data:/app/data
+      - ../../logs:/app/logs
+      - ../../charts:/app/charts
+    ports:
+      - "8000:8000"
+  frontend:
+    build:
+      context: ../..
+      dockerfile: app/infra/Dockerfile.frontend
+    env_file:
+      - ../../.env
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://backend:8000/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
